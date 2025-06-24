@@ -1,9 +1,9 @@
-variable "aws_region" {
+variable "aws-region" {
   description = "The AWS region to deploy resources in"
   type        = string
   default     = "us-east-1"
 }
 
-provider "aws_default" {
-  region = var.aws_region
+provider "aws" {
+  region = var.aws-region
 }
