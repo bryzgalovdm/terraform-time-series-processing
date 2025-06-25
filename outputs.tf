@@ -19,3 +19,33 @@ output "dead-letter-sqs-bucket-name" {
   value       = aws_s3_bucket.dead-letter-sqs-bucket.id
 
 }
+
+output "input-queue-url" {
+  description = "URL of the input SQS queue"
+  value       = aws_sqs_queue.input_queue.id
+}
+
+output "input-queue-arn" {
+  description = "ARN of the input SQS queue"
+  value       = aws_sqs_queue.input_queue.arn
+}
+
+output "output-queue-url" {
+  description = "URL of the output SQS queue"
+  value       = aws_sqs_queue.output_queue.id
+}
+
+output "output-queue-arn" {
+  description = "ARN of the output SQS queue"
+  value       = aws_sqs_queue.output_queue.arn
+}
+
+output "dead-letter-queue-url" {
+  description = "URL of the dead-letter SQS queue"
+  value       = aws_sqs_queue.dead_letter_queue.id
+}
+
+output "dead-letter-queue-arn" {
+  description = "ARN of the dead-letter SQS queue"
+  value       = aws_sqs_queue.dead_letter_queue.arn
+}
