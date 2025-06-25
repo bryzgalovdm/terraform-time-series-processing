@@ -2,8 +2,8 @@ data "aws_ami" "ubuntu" {
   most_recent = true
 
   filter {
-    name   = "ubuntu-release24"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-24.04-amd64-server-*"]
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 
   filter {
