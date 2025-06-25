@@ -24,3 +24,8 @@ terraform.rc
 
 # Lock files
 *.lock.hcl
+
+# Plans
+*.tfplan
+*.tfplan.*
+tfplan
