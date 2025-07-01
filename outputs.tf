@@ -49,3 +49,20 @@ output "dead-letter-queue-arn" {
   description = "ARN of the dead-letter SQS queue"
   value       = aws_sqs_queue.dead_letter_queue.arn
 }
+
+output "ecs-cluster-name" {
+  description = "Name of the ECS cluster"
+  value       = aws_ecs_cluster.ecs_cluster.name
+  
+}
+
+output "ecs-service-name" {
+  description = "Name of the ECS service"
+  value       = aws_ecs_service.ecs_service.name
+  
+}
+
+output "ecs-task-definition-arn" {
+  description = "ARN of the ECS task definition"
+  value       = aws_ecs_task_definition.ecs_task_definition.arn
+}
