@@ -1,6 +1,10 @@
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.project}-${var.environment}-esc-cluster"
 
+  tags = {
+    Project     = var.project
+    Environment = var.environment
+  }
 }
 
 # ECS Task Definition
@@ -32,6 +36,11 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       ]
     },
   ])
+
+  tags = {
+    Project     = var.project
+    Environment = var.environment
+  }
 }
 
 resource "aws_ecs_service" "ecs_service" {
@@ -49,6 +58,11 @@ resource "aws_ecs_service" "ecs_service" {
 
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100
+
+  tags = {
+    Project     = var.project
+    Environment = var.environment
+  }
 }
 
 

@@ -18,4 +18,10 @@ resource "aws_instance" "web-server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
 
+  tags = {
+    Name        = "${var.project}-${var.environment}-web-server"
+    Project     = var.project
+    Environment = var.environment
+  }
+
 }

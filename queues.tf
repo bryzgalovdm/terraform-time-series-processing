@@ -5,7 +5,8 @@ resource "aws_sqs_queue" "dead_letter_queue" {
   visibility_timeout_seconds = 900    # 15 minutes
 
   tags = {
-    Environment = "production"
+    Project     = var.project
+    Environment = var.environment
   }
 }
 
@@ -18,6 +19,11 @@ resource "aws_sqs_queue" "input_queue" {
     deadLetterTargetArn = aws_sqs_queue.dead_letter_queue.arn
     maxReceiveCount     = 3 # After 3 failed attempts, messages will be sent to the dead-letter queue
   })
+
+  tags = {
+    Project     = var.project
+    Environment = var.environment
+  }
 }
 
 resource "aws_sqs_queue" "output_queue" {
@@ -26,6 +32,10 @@ resource "aws_sqs_queue" "output_queue" {
   receive_wait_time_seconds  = 20    # Long polling
   visibility_timeout_seconds = 900   # 15 minutes
 
+  tags = {
+    Project     = var.project
+    Environment = var.environment
+  }
 }
 
 resource "aws_sqs_queue_policy" "dead_letter_queue_policy" {

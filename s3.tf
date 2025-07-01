@@ -2,6 +2,11 @@
 resource "aws_s3_bucket" "input-parquet-data" {
   bucket = "${var.project}-${var.environment}-parquet-data"
 
+  tags = {
+    Name        = "${var.project}-${var.environment}-input-parquet-data"
+    Project     = var.project
+    Environment = var.environment
+  }
 }
 
 resource "aws_s3_bucket_versioning" "input-parquet-data-versioning" {
@@ -9,6 +14,7 @@ resource "aws_s3_bucket_versioning" "input-parquet-data-versioning" {
   versioning_configuration {
     status = "Enabled"
   }
+
 }
 
 resource "aws_s3_bucket_public_access_block" "input-parquet-data-acl" {
@@ -33,6 +39,12 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "input-parquet-dat
 # Bucket for SQS input queue large messages (1 day retention)
 resource "aws_s3_bucket" "input-sqs-bucket" {
   bucket = "${var.project}-${var.environment}-tf-input-queue-bucket"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-input-sqs-bucket"
+    Project     = var.project
+    Environment = var.environment
+  }
 
 }
 
@@ -72,6 +84,11 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "input-sqs-bucket-
 resource "aws_s3_bucket" "output-sqs-bucket" {
   bucket = "${var.project}-${var.environment}-tf-output-queue-bucket"
 
+  tags = {
+    Name        = "${var.project}-${var.environment}-output-sqs-bucket"
+    Project     = var.project
+    Environment = var.environment
+  }
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "output-sqs-bucket-lifecycle" {

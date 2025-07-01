@@ -14,6 +14,11 @@ resource "aws_iam_role" "ecs_task_execution_role" {
     ]
   })
 
+  tags = {
+    Project     = var.project
+    Environment = var.environment
+  }
+
 }
 
 resource "aws_iam_role" "ecs_task_role" {
@@ -31,6 +36,11 @@ resource "aws_iam_role" "ecs_task_role" {
       },
     ]
   })
+
+  tags = {
+      Project     = var.project
+      Environment = var.environment
+    }  
 
 }
 
@@ -57,6 +67,11 @@ resource "aws_iam_policy" "esc_task_execution_policy" {
       },
     ]
   })
+
+  tags = {
+      Project     = var.project
+      Environment = var.environment
+    }  
 
 }
 
