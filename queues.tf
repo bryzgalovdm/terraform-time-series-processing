@@ -16,7 +16,7 @@ resource "aws_sqs_queue" "input_queue" {
   visibility_timeout_seconds = 900   # 15 minutes
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.dead_letter_queue.arn
-    maxReceiveCount      = 3 # After 3 failed attempts, messages will be sent to the dead-letter queue
+    maxReceiveCount     = 3 # After 3 failed attempts, messages will be sent to the dead-letter queue
   })
 }
 
@@ -32,19 +32,19 @@ resource "aws_sqs_queue_policy" "dead_letter_queue_policy" {
   queue_url = aws_sqs_queue.dead_letter_queue.id
 
   policy = jsonencode({
-  Version = "2012-10-17"
-  Statement = [
+    Version = "2012-10-17"
+    Statement = [
       {
-      Effect    = "Allow"
-      Principal = "*"
-      Action    = "SQS:SendMessage"
-      Resource  = aws_sqs_queue.dead_letter_queue.arn
-      Condition = {
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "SQS:SendMessage"
+        Resource  = aws_sqs_queue.dead_letter_queue.arn
+        Condition = {
           StringEquals = {
-          "aws:SourceArn" = aws_sqs_queue.input_queue.arn
+            "aws:SourceArn" = aws_sqs_queue.input_queue.arn
           }
+        }
       }
-      }
-  ]
+    ]
   })
 }

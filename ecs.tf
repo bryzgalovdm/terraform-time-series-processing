@@ -10,8 +10,8 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
   network_mode             = "awsvpc"
   cpu                      = "1024"
   memory                   = "2048"
-  execution_role_arn       = data.aws_cloudformation_export.ecs_task_execution_role_arn.value
-  task_role_arn            = data.aws_cloudformation_export.ecs_task_role_arn.value
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
@@ -23,11 +23,11 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       environment = [
         {
           name  = "INPUT_QUEUE_URL"
-          value = output.input-queue-url.value
+          value = aws_sqs_queue.input_queue.id
         },
         {
           name  = "OUTPUT_QUEUE_URL"
-          value = output.output-queue-url.value
+          value = aws_sqs_queue.output_queue.id
         },
       ]
     },
@@ -40,22 +40,21 @@ resource "aws_ecs_service" "ecs_service" {
   task_definition = aws_ecs_task_definition.ecs_task_definition.arn
   desired_count   = 3
   launch_type     = "FARGATE"
-  iam_role        = aws_iam_role.ecs_task_execution_role.arn
-  depends_on      = [aws_iam_role_policy_attachment.ecs_task_execution_role_policy_attachment]
+  
   network_configuration {
-    subnets          = data.aws_subnet_ids.private.ids
-    security_groups  = [aws_security_group.foo.id]
+    subnets          = aws_subnet.private[*].id
+    security_groups  = [aws_security_group.ecs.id]
     assign_public_ip = false
   }
 
-  deployment_maximum_percent = 200
+  deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100
 }
 
 
 resource "aws_appautoscaling_target" "ecs_target" {
   max_capacity       = 10 # Maximum number of tasks
-  min_capacity       = 3 # Minimum number of tasks
+  min_capacity       = 3  # Minimum number of tasks
   resource_id        = "service/${aws_ecs_cluster.ecs_cluster.name}/${aws_ecs_service.ecs_service.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
@@ -75,12 +74,12 @@ resource "aws_appautoscaling_policy" "ecs_cpu_scaling_policy" {
 
     customized_metric_specification {
       metric_name = "ApproximateNumberOfMessagesVisible"
-      namespace = "AWS/SQS"
-        statistic = "Average"
-        dimensions {
-          name = "QueueName"
-          value = aws_sqs_queue.input_queue.name
-        }
+      namespace   = "AWS/SQS"
+      statistic   = "Average"
+      dimensions {
+        name  = "QueueName"
+        value = aws_sqs_queue.input_queue.name
+      }
     }
 
     scale_in_cooldown  = 60
